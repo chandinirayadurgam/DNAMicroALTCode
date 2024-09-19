@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: canary-whoami
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: canary-whoami
+  template:
+    metadata:
+      labels:
+        app: canary-whoami
+    spec:
+      containers:
+      - name: canary-container
+        image: emilevauge/whoami
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: canary-whoami-service
+spec:
+  selector:
+    app: canary-whoami
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
